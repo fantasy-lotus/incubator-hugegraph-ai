@@ -57,3 +57,4 @@ hugegraph-ai is licensed under [Apache 2.0 License](./LICENSE).
 
  <img src="https://raw.githubusercontent.com/apache/hugegraph-doc/master/assets/images/wechat.png" alt="QR png" width="350"/>
 
+
