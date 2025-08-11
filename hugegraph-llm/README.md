@@ -186,3 +186,4 @@ Here is a brief usage guide:
     ```python
     graph_rag.run(verbose=True)
     ```
+
