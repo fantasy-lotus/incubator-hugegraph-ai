@@ -17,7 +17,7 @@
 
 
 import re
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
 
 import jieba
 
@@ -35,7 +35,9 @@ class WordExtract:
     ):
         self._llm = llm
         self._query = text
-        self._language = llm_settings.language.lower()
+        # 未传入值或者其他值，默认使用英文
+        lang_raw = llm_settings.language.lower()
+        self._language = "chinese" if lang_raw == "cn" else "english"
 
     def run(self, context: Dict[str, Any]) -> Dict[str, Any]:
         if self._query is None:
@@ -47,9 +49,6 @@ class WordExtract:
         if self._llm is None:
             self._llm = LLMs().get_extract_llm()
             assert isinstance(self._llm, BaseLLM), "Invalid LLM Object."
-
-        # 未传入值或者其他值，默认使用英文
-        self._language = "chinese" if self._language == "cn" else "english"
 
         keywords = jieba.lcut(self._query)
         keywords = self._filter_keywords(keywords, lowercase=False)
@@ -75,8 +74,6 @@ class WordExtract:
             results.add(token)
             sub_tokens = re.findall(r"\w+", token)
             if len(sub_tokens) > 1:
-                results.update(
-                    {w for w in sub_tokens if w not in NLTKHelper().stopwords(lang=self._language)}
-                )
+                results.update({w for w in sub_tokens if w not in NLTKHelper().stopwords(lang=self._language)})
 
         return list(results)
